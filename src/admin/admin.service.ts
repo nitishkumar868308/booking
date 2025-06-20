@@ -30,10 +30,11 @@ export class AdminService {
                     select: { id: true, name: true, email: true },
                 },
                 provider: {
-                    select: { id: true, name: true, email: true }, 
+                    select: { id: true, name: true, email: true },
                 },
                 availability: true,
             },
         });
     }
+
 }
