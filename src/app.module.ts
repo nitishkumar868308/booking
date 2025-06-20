@@ -8,7 +8,7 @@ import { AvailabilityModule } from './availability/availability.module';
 import { AdminModule } from './admin/admin.module';
 
 @Module({
-  imports: [ AuthModule, BookingModule, AvailabilityModule, AdminModule],
+  imports: [ AuthModule,AvailabilityModule, BookingModule, AdminModule],
   controllers: [AppController],
   providers: [AppService],
 })
