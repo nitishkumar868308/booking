@@ -1,4 +1,4 @@
-// src/auth/dto/register.dto.ts
+
 import { IsEmail, IsNotEmpty, IsString, IsIn } from 'class-validator';
 
 export class RegisterDto {

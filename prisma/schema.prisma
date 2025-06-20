@@ -7,48 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String    @id @default(uuid())
-  name      String
-  email     String    @unique
-  password  String
-  role      Role
-  bookings  Booking[]
-  provider  Provider? // ✅ reverse relation
-  createdAt DateTime  @default(now())
-}
-
-model Provider {
-  id           String         @id @default(uuid())
-  userId       String         @unique
-  user         User           @relation(fields: [userId], references: [id])
-  availability Availability[]
-  bookings     Booking[]
-}
-
-model Availability {
-  id         String    @id @default(uuid())
-  provider   Provider  @relation(fields: [providerId], references: [id])
-  providerId String
-  startTime  DateTime
-  endTime    DateTime
-  isBooked   Boolean   @default(false)
-  bookings   Booking[] // ✅ reverse relation
-}
-
-model Booking {
-  id             String       @id @default(uuid())
-  client         User         @relation(fields: [clientId], references: [id])
-  clientId       String
-  provider       Provider     @relation(fields: [providerId], references: [id])
-  providerId     String
-  availability   Availability @relation(fields: [availabilityId], references: [id])
-  availabilityId String
-  createdAt      DateTime     @default(now())
-}
-
 enum Role {
   CLIENT
   PROVIDER
   ADMIN
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  role      Role
+  createdAt DateTime   @default(now())
+
+  // Relations
+  bookings          Booking[]         @relation("ClientBookings")
+  providerBookings  Booking[]         @relation("ProviderBookings")
+  availabilities    Availability[]    @relation("ProviderAvailabilities")
+}
+
+model Availability {
+  id         String    @id @default(uuid())
+  providerId String
+  provider   User      @relation("ProviderAvailabilities", fields: [providerId], references: [id])
+
+  startTime  DateTime
+  endTime    DateTime
+  isBooked   Boolean   @default(false)
+
+  bookings   Booking[]
+}
+
+model Booking {
+  id             String     @id @default(uuid())
+
+  clientId       String
+  client         User       @relation("ClientBookings", fields: [clientId], references: [id])
+
+  providerId     String
+  provider       User       @relation("ProviderBookings", fields: [providerId], references: [id])
+
+  availabilityId String
+  availability   Availability @relation(fields: [availabilityId], references: [id])
+
+  createdAt      DateTime   @default(now())
 }
